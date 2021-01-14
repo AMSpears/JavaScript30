@@ -48,15 +48,27 @@
       return `
         <li>
           <input type='checkbox' data-index=${idx} id="item${idx}" ${plate.done ? 'checked' : ''}/>
-          <label for="">${plate.text}</label>
+          <label for="item${idx}">${plate.text}</label>
         </li>
       `
     }).join('');
   }
 
-  addItems.addEventListener('submit', addItem);
-
+ // event delegation: listening for event on something higher
+ function toggleDone(e) {
+  if (!e.target.matches('input')) return // skip unless this is an input
+  const elem = e.target
+  const idx = elem.dataset.index
+  items[idx].done = !items[idx].done
+  localStorage.setItem('items', JSON.stringify(items));
   populateList(items, itemsList);
+
+ }
+
+ addItems.addEventListener('submit', addItem);
+ itemsList.addEventListener('click', toggleDone);
+
+ populateList(items, itemsList);
 </script>
 
 
